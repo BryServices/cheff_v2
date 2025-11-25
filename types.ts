@@ -1,3 +1,4 @@
+
 export interface Dish {
   id: string;
   name: string;
@@ -11,6 +12,7 @@ export interface Dish {
 export interface Restaurant {
   id: string;
   name: string;
+  description?: string; // Nouvelle description
   cuisineType: string;
   rating: number;
   deliveryTime: string;
@@ -30,6 +32,28 @@ export interface CartItem extends Dish {
   restaurantName: string;
 }
 
+export interface Notification {
+  id: string;
+  title: string;
+  message: string;
+  time: string;
+  read: boolean;
+  type: 'ORDER' | 'PROMO' | 'SYSTEM';
+}
+
+export type OrderStatus = 'PENDING' | 'PREPARING' | 'DELIVERING' | 'COMPLETED' | 'CANCELLED';
+
+export interface Order {
+  id: string;
+  restaurantId: string;
+  restaurantName: string;
+  items: CartItem[];
+  total: number;
+  status: OrderStatus;
+  date: string; // ISO string
+  deliveryAddress: string;
+}
+
 export type ScreenName = 
   | 'ONBOARDING'
   | 'HOME'
@@ -38,9 +62,20 @@ export type ScreenName =
   | 'CART'
   | 'CHECKOUT'
   | 'SUCCESS'
-  | 'SEARCH' // Placeholder
-  | 'FAVORITES' // Placeholder
-  | 'ORDERS' // Placeholder
-  | 'PROFILE'; // Placeholder
+  | 'SEARCH'
+  | 'DISHES'
+  | 'ORDERS'
+  | 'PROFILE'
+  | 'NOTIFICATIONS'
+  | 'FAVORITES';
 
 export type PaymentMethod = 'MOBILE_MONEY' | 'AIRTEL_MONEY';
+
+export interface UserProfile {
+  name: string;
+  phone: string;
+  email: string;
+  avatar: string;
+  preferences?: string[]; // Ajout pour la personnalisation
+  loyaltyPoints?: number; // Ajout pour la gamification
+}
