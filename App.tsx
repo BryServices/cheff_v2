@@ -1,8 +1,8 @@
-
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { ScreenName, Restaurant, Dish, CartItem, Notification, Order, UserProfile } from './types';
 import { BottomNav } from './components/UIComponents';
 import { MOCK_NOTIFICATIONS, MOCK_ORDERS, RESTAURANTS } from './data';
+import { WifiOff } from 'lucide-react';
 import { 
   OnboardingScreen, 
   HomeScreen, 
@@ -26,6 +26,22 @@ const App: React.FC = () => {
   const [notifications, setNotifications] = useState<Notification[]>(MOCK_NOTIFICATIONS);
   const [favoriteIds, setFavoriteIds] = useState<string[]>(['101', '201']); // Default some favorite dishes
   const [orders, setOrders] = useState<Order[]>(MOCK_ORDERS);
+  
+  // Offline State
+  const [isOffline, setIsOffline] = useState(!navigator.onLine);
+
+  useEffect(() => {
+    const handleOnline = () => setIsOffline(false);
+    const handleOffline = () => setIsOffline(true);
+
+    window.addEventListener('online', handleOnline);
+    window.addEventListener('offline', handleOffline);
+
+    return () => {
+      window.removeEventListener('online', handleOnline);
+      window.removeEventListener('offline', handleOffline);
+    };
+  }, []);
   
   // Auth State & User Data with Preferences
   const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -369,6 +385,13 @@ const App: React.FC = () => {
 
   return (
     <div className="min-h-screen bg-cheff-brown text-cheff-cream font-sans selection:bg-cheff-orange selection:text-white">
+      {/* OFFLINE BANNER */}
+      {isOffline && (
+        <div className="fixed top-0 left-0 right-0 z-[60] bg-red-600 text-white text-xs font-bold py-2 text-center shadow-md animate-slide-down flex items-center justify-center gap-2">
+           <WifiOff size={14} /> Mode hors ligne - Vérifiez votre connexion
+        </div>
+      )}
+
       {renderScreen()}
       
       {showBottomNav && (
