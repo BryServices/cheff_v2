@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { Home, Search, ShoppingBag, User, Plus, Minus, ChevronLeft, FileText, UtensilsCrossed } from 'lucide-react';
 import { ScreenName } from '../types';
@@ -163,4 +162,10 @@ export const QuantityControl: React.FC<{ value: number, onChange: (val: number) 
       <Plus size={18} />
     </button>
   </div>
+);
+
+// --- Skeleton Loader ---
+
+export const Skeleton: React.FC<{ className?: string }> = ({ className = '' }) => (
+  <div className={`animate-pulse bg-white/10 ${className}`} />
 );
