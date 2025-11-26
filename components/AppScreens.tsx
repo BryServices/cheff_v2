@@ -1038,8 +1038,8 @@ export const ProfileScreen: React.FC<{
                             className="w-full bg-black/20 rounded-xl p-3 text-white outline-none border border-white/10 focus:border-cheff-orange"
                          />
                          <div className="flex gap-2">
-                            <Button size="sm" fullWidth variant="secondary" onClick={() => setIsAddingAddress(false)}>Annuler</Button>
-                            <Button size="sm" fullWidth onClick={handleAddAddress}>Sauvegarder</Button>
+                            <Button fullWidth variant="secondary" onClick={() => setIsAddingAddress(false)}>Annuler</Button>
+                            <Button fullWidth onClick={handleAddAddress}>Sauvegarder</Button>
                          </div>
                       </div>
                    ) : (
@@ -1091,8 +1091,8 @@ export const ProfileScreen: React.FC<{
                             className="w-full bg-black/20 rounded-xl p-3 text-white outline-none border border-white/10 focus:border-cheff-orange"
                          />
                          <div className="flex gap-2">
-                            <Button size="sm" fullWidth variant="secondary" onClick={() => setIsAddingPayment(false)}>Annuler</Button>
-                            <Button size="sm" fullWidth onClick={handleAddPayment}>Sauvegarder</Button>
+                            <Button fullWidth variant="secondary" onClick={() => setIsAddingPayment(false)}>Annuler</Button>
+                            <Button fullWidth onClick={handleAddPayment}>Sauvegarder</Button>
                          </div>
                       </div>
                    ) : (

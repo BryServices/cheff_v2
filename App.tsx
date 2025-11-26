@@ -260,7 +260,7 @@ const App: React.FC = () => {
         return (
           <AllDishesScreen 
             onSelectDish={handleSelectDishWithContext}
-            onAddToCart={(dish) => handleAddToCart(dish, 1, [])}
+            onAddToCart={(dish: Dish) => handleAddToCart(dish, 1, [])}
             userPreferences={user.preferences || []}
           />
         );
