@@ -1,6 +1,6 @@
 
 import React, { useState, useEffect, useRef } from 'react';
-import { MapPin, Star, Clock, ShoppingBag, Truck, Check, ChevronRight, Utensils, CreditCard, Trash2, ArrowRight, Heart, Plus, Minus, ChevronLeft, Filter, User, Settings, History, Bell, HelpCircle, LogOut, FileText, Smartphone, MessageCircle, Gift, X, Ticket, Bike, Package, Camera, Edit2, Save, Mail, Upload, Home as HomeIcon, Briefcase, UtensilsCrossed, AlignLeft, Info, Megaphone, Flame, ThumbsUp, Moon, Globe, Shield, Zap, ArrowLeft, AlertTriangle, CheckCircle, Lock, Share2, Award, Zap as ZapIcon, PlusCircle } from 'lucide-react';
+import { MapPin, Star, Clock, ShoppingBag, Truck, Check, ChevronRight, Utensils, CreditCard, Trash2, ArrowRight, Heart, Plus, Minus, ChevronLeft, Filter, User, Settings, History, Bell, HelpCircle, LogOut, FileText, Smartphone, MessageCircle, Gift, X, Ticket, Bike, Package, Camera, Edit2, Save, Mail, Upload, Home as HomeIcon, Briefcase, UtensilsCrossed, AlignLeft, Info, Megaphone, Flame, ThumbsUp, Moon, Globe, Shield, Zap, ArrowLeft, AlertTriangle, CheckCircle, Lock, Share2, Award, Zap as ZapIcon, PlusCircle, Download } from 'lucide-react';
 import { Restaurant, Dish, CartItem, PaymentMethod, Notification, Order, OrderStatus, ScreenName, UserProfile } from '../types';
 import { Button, Header, SearchInput, QuantityControl } from './UIComponents';
 import { RESTAURANTS, CATEGORIES } from '../data';
@@ -777,6 +777,7 @@ export const ProfileScreen: React.FC<{
   const [activeModal, setActiveModal] = useState<null | 'EDIT_INFO' | 'ADDRESSES' | 'PAYMENT' | 'SUPPORT' | 'SETTINGS' | 'AUTH_LOGIN' | 'AUTH_SIGNUP'>(null);
   const [userInfo, setUserInfo] = useState(user);
   const [isSubmitting, setIsSubmitting] = useState(false); // Loading state
+  const [deferredPrompt, setDeferredPrompt] = useState<any>(null); // PWA Install Prompt
 
   // Login Form
   const [loginForm, setLoginForm] = useState({ identifier: '', password: '' });
@@ -796,6 +797,27 @@ export const ProfileScreen: React.FC<{
   ]);
   const [newPayment, setNewPayment] = useState({ type: 'MTN Mobile Money', number: '' });
   const [isAddingPayment, setIsAddingPayment] = useState(false);
+
+  // PWA Install Effect
+  useEffect(() => {
+    const handleBeforeInstallPrompt = (e: any) => {
+      e.preventDefault();
+      setDeferredPrompt(e);
+    };
+
+    window.addEventListener('beforeinstallprompt', handleBeforeInstallPrompt);
+
+    return () => {
+      window.removeEventListener('beforeinstallprompt', handleBeforeInstallPrompt);
+    };
+  }, []);
+
+  const handleInstallApp = async () => {
+    if (!deferredPrompt) return;
+    deferredPrompt.prompt();
+    const { outcome } = await deferredPrompt.userChoice;
+    setDeferredPrompt(null);
+  };
   
   // Handlers
   const handleLoginSubmit = (e: React.FormEvent) => {
@@ -840,7 +862,14 @@ export const ProfileScreen: React.FC<{
 
   const menuGroups = [
     { title: "Mon Compte", items: [{ icon: Heart, label: 'Mes Favoris', action: () => onNavigate('FAVORITES') }, { icon: MapPin, label: 'Mes adresses', action: () => setActiveModal('ADDRESSES') }, { icon: CreditCard, label: 'Moyens de paiement', action: () => setActiveModal('PAYMENT') }] },
-    { title: "Application", items: [{ icon: Settings, label: 'Paramètres', action: () => setActiveModal('SETTINGS') }, { icon: HelpCircle, label: 'Aide & Support', action: () => setActiveModal('SUPPORT') }] }
+    { 
+      title: "Application", 
+      items: [
+        { icon: Settings, label: 'Paramètres', action: () => setActiveModal('SETTINGS') }, 
+        { icon: HelpCircle, label: 'Aide & Support', action: () => setActiveModal('SUPPORT') },
+        ...(deferredPrompt ? [{ icon: Download, label: "Installer l'application", action: handleInstallApp }] : [])
+      ] 
+    }
   ];
 
   if (!isLoggedIn) {
